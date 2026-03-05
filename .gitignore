@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Node
+frontend/node_modules/
+frontend/.next/
+
+# Env
+.env
+
+# Data
+backend/data/elections/**/state.db
+backend/data/elections/**/state.db-*
+backend/data/elections/**/raw/**
+!backend/data/elections/**/raw/.gitkeep
+
+# Misc
+.DS_Store

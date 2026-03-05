@@ -1,0 +1,50 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    env_file:
+      - .env
+    environment:
+      DB_PATH: /app/backend/data/elections/2082/state.db
+      CORS_ALLOW_ORIGINS: ${CORS_ALLOW_ORIGINS:-*}
+      API_CACHE_CONTROL: ${API_CACHE_CONTROL:-public, s-maxage=15, stale-while-revalidate=30}
+      STALE_THRESHOLD_SECONDS: ${STALE_THRESHOLD_SECONDS:-600}
+      DEFAULT_ELECTION_ID: ${DEFAULT_ELECTION_ID:-2082}
+    volumes:
+      - ./backend/data:/app/backend/data
+    ports:
+      - "8000:8000"
+
+  poller:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    env_file:
+      - .env
+    environment:
+      DB_PATH: /app/backend/data/elections/2082/state.db
+      ACTIVE_ELECTIONS: ${ACTIVE_ELECTIONS:-2082,2079}
+      POLL_INTERVAL_SECONDS: ${POLL_INTERVAL_SECONDS:-45}
+      POLL_STAGGER_SECONDS: ${POLL_STAGGER_SECONDS:-1}
+      HTTP_TIMEOUT_SECONDS: ${HTTP_TIMEOUT_SECONDS:-20}
+      INGEST_USER_AGENT: ${INGEST_USER_AGENT:-ElectionPoller/1.0}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    volumes:
+      - ./backend/data:/app/backend/data
+    command: ["python", "-m", "ingest.poll"]
+    depends_on:
+      - backend
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    env_file:
+      - .env
+    environment:
+      NEXT_PUBLIC_API_BASE: ${NEXT_PUBLIC_API_BASE:-/api}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend

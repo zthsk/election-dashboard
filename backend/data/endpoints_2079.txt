@@ -1,0 +1,2 @@
+https://result.election.gov.np/JSONFiles/ElectionResultCentral2079.txt
+https://result.election.gov.np/JSONFiles/ElectionResultState2079.txt
