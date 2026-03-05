@@ -28,7 +28,10 @@ def endpoints_file_for(election_id: str) -> Path:
 
 
 def fetch_html(url: str, timeout: int = 20) -> str:
-    req = Request(url, headers={"User-Agent": "ElectionDiscover/1.0"})
+    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; rv:109.0) Gecko/20100101 Firefox/119.0"}
+    if "election.gov.np" in url:
+        headers["Referer"] = "https://result.election.gov.np/"
+    req = Request(url, headers=headers)
     with urlopen(req, timeout=timeout) as response:
         return response.read().decode("utf-8", errors="replace")
 

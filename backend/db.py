@@ -151,6 +151,30 @@ def init_db() -> None:
                 errors INTEGER NOT NULL DEFAULT 0,
                 notes TEXT
             );
+
+            CREATE TABLE IF NOT EXISTS candidates_profiles_2082 (
+                profile_id INTEGER PRIMARY KEY,
+                candidate_name TEXT,
+                candidate_name_nep TEXT,
+                party_id INTEGER,
+                party_name TEXT,
+                party_name_nep TEXT,
+                party_symbol_url TEXT,
+                constituency TEXT,
+                district TEXT,
+                province TEXT,
+                birth_date TEXT,
+                birth_place TEXT,
+                address TEXT,
+                education TEXT,
+                election_system TEXT,
+                photo_path TEXT,
+                profile_url TEXT,
+                political_history TEXT,
+                parliament_tour TEXT,
+                extra_json TEXT,
+                updated_ts TEXT NOT NULL
+            );
             """
         )
 

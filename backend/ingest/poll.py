@@ -25,8 +25,13 @@ RAW_ROOT = BASE_DIR / "data" / "elections"
 POLL_INTERVAL = int(os.getenv("POLL_INTERVAL_SECONDS", "45"))
 POLL_STAGGER = float(os.getenv("POLL_STAGGER_SECONDS", "1"))
 HTTP_TIMEOUT = int(os.getenv("HTTP_TIMEOUT_SECONDS", "20"))
-USER_AGENT = os.getenv("INGEST_USER_AGENT", "ElectionPoller/1.0")
+# Browser-like default to reduce 403 from Election Commission (result.election.gov.np)
+USER_AGENT = os.getenv(
+    "INGEST_USER_AGENT",
+    "Mozilla/5.0 (Windows NT 10.0; rv:109.0) Gecko/20100101 Firefox/119.0",
+)
 ACTIVE_ELECTIONS_RAW = os.getenv("ACTIVE_ELECTIONS", "2082,2079")
+EC_REFERER = os.getenv("INGEST_REFERER", "https://result.election.gov.np/")
 
 
 def _active_elections() -> List[str]:
@@ -62,7 +67,10 @@ def _safe_name(url: str) -> str:
 
 
 def _fetch(url: str) -> Tuple[int, bytes]:
-    request = Request(url, headers={"User-Agent": USER_AGENT})
+    headers = {"User-Agent": USER_AGENT}
+    if "election.gov.np" in url and EC_REFERER:
+        headers["Referer"] = EC_REFERER
+    request = Request(url, headers=headers)
     with urlopen(request, timeout=HTTP_TIMEOUT) as response:
         status = getattr(response, "status", response.getcode())
         data = response.read()

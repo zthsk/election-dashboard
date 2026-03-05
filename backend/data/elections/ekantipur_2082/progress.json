@@ -1,0 +1,13 @@
+{
+  "ts": "2026-03-05T05:38:39.849976+00:00",
+  "phase": "done",
+  "counts": {
+    "parties": 67,
+    "candidates_rows": 3406,
+    "profiles_rows": 3406,
+    "party_symbols": 67,
+    "candidate_photos": 1272,
+    "profile_fail": 0,
+    "page_fail": 0
+  }
+}
